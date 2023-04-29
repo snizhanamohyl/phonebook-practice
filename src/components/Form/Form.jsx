@@ -1,0 +1,73 @@
+import { useState } from 'react';
+import { nanoid } from 'nanoid';
+import PropTypes from 'prop-types'; 
+import css from './Form.module.css';
+
+export default function Form({addContact, contacts}) {
+  const [name, setName] = useState(''); 
+  const [number, setNumber] = useState(''); 
+
+  const onChange = ({ target }) => {
+    switch (target.name) {
+      case 'name':
+        setName(target.value);
+        break;
+      case 'number':
+        setNumber(target.value);
+        break;
+      default:
+        break;
+    }
+  }
+
+  const resetForm = () => {
+    setName('');
+    setNumber('');
+  }
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    if (contacts.find(contact => contact.name === name)) {
+      alert(`${name} is already in contacts.`);
+      return;
+    };
+
+    addContact({name, number, id: nanoid() });
+    resetForm();
+  }
+  
+  return <form className={css.form} onSubmit={onSubmit}>
+          <label className={css.label}>
+          Name
+          <input className={css.input}
+        type="text"
+        name="name"
+        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+        title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+              required
+              value={name}
+              onChange={onChange}
+      />
+          </label>
+          <label className={css.label}>Phone<input className={css.input}
+            type="tel"
+            name="number"
+            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            required
+            value={number}
+            onChange={onChange}/></label>
+          <button className={css.btn} type="submit">Add contact</button>
+        </form>
+  
+}
+
+Form.propTypes = {
+  contacts: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+     number: PropTypes.string.isRequired,
+  })),
+  addContact: PropTypes.func.isRequired,
+};
