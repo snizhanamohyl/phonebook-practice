@@ -1,11 +1,16 @@
-import { useState } from 'react';
-import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types'; 
+import { useState } from 'react'; 
 import css from './Form.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectContacts, selectFilter } from 'components/redux/selectors';
+import { addContact } from 'components/redux/contacts/operations';
 
-export default function Form({addContact, contacts}) {
+export default function Form() {
   const [name, setName] = useState(''); 
   const [number, setNumber] = useState(''); 
+
+  const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
+  // const filterValue = useSelector(selectFilter);
 
   const onChange = ({ target }) => {
     switch (target.name) {
@@ -33,7 +38,7 @@ export default function Form({addContact, contacts}) {
       return;
     };
 
-    addContact({name, number, id: nanoid() });
+    dispatch(addContact({name, number }));
     resetForm();
   }
   
@@ -62,12 +67,3 @@ export default function Form({addContact, contacts}) {
         </form>
   
 }
-
-Form.propTypes = {
-  contacts: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-     number: PropTypes.string.isRequired,
-  })),
-  addContact: PropTypes.func.isRequired,
-};

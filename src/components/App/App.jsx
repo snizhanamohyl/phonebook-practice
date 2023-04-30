@@ -1,50 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import Form from 'components/Form/Form';
 import Contacts from 'components/Contacts/Contacts';
 import Filter from 'components/Filter/Filter';
 import css from './App.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchContacts } from 'components/redux/contacts/operations';
+import { selectIsLoading } from 'components/redux/selectors';
 
 export default function App() {
-  const [contacts, setContacts] = useState([]);
-  const [filter, setFilter] = useState('');
-
+  const dispatch = useDispatch()
+  const isLoading = useSelector(selectIsLoading);
 
   useEffect(() => {
-    const savedContacts = JSON.parse(localStorage.getItem('contacts'));
-    if (savedContacts) setContacts(savedContacts);
-  }, [])
-
-  const addContact = (newContact) => {
-    setContacts(prev => {
-      const newContacts = [...prev, newContact];
-
-      localStorage.setItem("contacts", JSON.stringify(newContacts));
-
-      return newContacts;
-    });
-  }
-
-  const deleteContact = (id) => {
-    setContacts(prev => {
-      const updatedContacts = prev.filter(contact => contact.id !== id);
-
-      localStorage.setItem("contacts", JSON.stringify(updatedContacts));
-
-      return updatedContacts; 
-    })
-  }
-
-  const filterContacts = () => {   
-    const filteredContacts = contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLowerCase()));
-
-    return filter === "" ?  contacts : filteredContacts;
-  }
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return <div className={css.container}>
-      <h1>Phonebook</h1>
-      <Form contacts={contacts} addContact={addContact}  />
-      {contacts.length !== 0 && <div><h2>Contacts</h2>
-      <Filter filterValue={filter} updateFilter={ setFilter} />
-      <Contacts deleteContact={deleteContact} contacts={filterContacts()} /></div>}
+    <h1>Phonebook</h1>
+    <Form />  
+    {isLoading && <p>Is Loading...</p>}
+    <div>
+      <h2>Contacts</h2>
+      <Filter/>
+      <Contacts/></div>
     </div>
 }
