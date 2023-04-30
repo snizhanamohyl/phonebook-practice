@@ -3,8 +3,6 @@ import Form from 'components/Form/Form';
 import Contacts from 'components/Contacts/Contacts';
 import Filter from 'components/Filter/Filter';
 import css from './App.module.css';
-import Counter from 'components/Counter';
-
 
 export default function App() {
   const [contacts, setContacts] = useState([]);
@@ -43,7 +41,6 @@ export default function App() {
   }
 
   return <div className={css.container}>
-      <Counter/>
       <h1>Phonebook</h1>
       <Form contacts={contacts} addContact={addContact}  />
       {contacts.length !== 0 && <div><h2>Contacts</h2>
