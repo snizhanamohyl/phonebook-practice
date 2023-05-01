@@ -1,7 +1,7 @@
 import { useState } from 'react'; 
 import css from './Form.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts, selectFilter } from 'components/redux/selectors';
+import { selectContacts } from 'components/redux/selectors';
 import { addContact } from 'components/redux/contacts/operations';
 
 export default function Form() {
@@ -10,7 +10,6 @@ export default function Form() {
 
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
-  // const filterValue = useSelector(selectFilter);
 
   const onChange = ({ target }) => {
     switch (target.name) {
